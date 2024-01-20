@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Welcome, {{user.first_name}} {{user.last_name}}!</h1>
+    <form action="/users/{{user.username}}/delete">
+        <button class="btn btn-danger btn-sm">x</button>
+    <h5>{{user.username}}</h5>
+    </form>
+
+    <p>
+        <strong>Email:</strong> {{user.email}}
+    </p>
+
+<h2>Posts</h2>
+{% if 'user_id' in session %}
+<div>
+    <form method="POST">
+        {{ fbform.hidden_tag() }}
+
+        {% for field in fbform if field.widget.input_type != 'hidden' %}
+        <p>
+            {{field.label}}
+            {{ field(class_='form-control') }}
+        </p>
+        {% endfor %}
+        <button class="btn btn-success">Post</button>
+    </form>
+</div>
+{% endif %}
+<div>
+    {% for fb in feed %}
+        <div class="card my-4">
+            <div class="card-body">
+                <h5 class="card-title text-info">{{fb.title}}                 
+                    {% if fb.username_id == session['user_id'] %}
+                    <a href="/feedback/{{fb.id}}/update" class="btn btn-link">Edit</a>
+                {% endif %}</h5> 
+                <h6 class="card-subtitle">{{fb.username_id}}</h6>
+                <p class="card-text">{{fb.content}}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
